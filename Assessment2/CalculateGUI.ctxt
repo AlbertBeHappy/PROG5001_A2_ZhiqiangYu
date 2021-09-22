@@ -1,0 +1,16 @@
+#BlueJ class context
+comment0.target=CalculateGUI
+comment0.text=\n\ Assessment\ 2\ the\ GUI\ of\ calculate.\n\n\ @author\ (Zhiqiang\ Yu)\n\ @version\ (version\ 1.0\ --\ 22/09/2021)\n
+comment1.params=
+comment1.target=CalculateGUI()
+comment1.text=\n\ Constructor\ for\ objects\ of\ class\ CalculateGUI\n
+comment2.params=
+comment2.target=void\ createCalcGUI()
+comment2.text=\n\ a\ method\ to\ set\ up\ the\ GUI;\n
+comment3.params=e
+comment3.target=void\ actionPerformed(java.awt.event.ActionEvent)
+comment3.text=\n\ the\ method\ of\ action\ listener;\n
+comment4.params=arg
+comment4.target=void\ main(java.lang.String[])
+comment4.text=\n\ the\ method\ of\ calculating\n
+numComments=5
