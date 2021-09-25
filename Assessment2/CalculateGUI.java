@@ -172,6 +172,9 @@ public class CalculateGUI extends JFrame implements ActionListener
             case "CMD_9":
                 displayText = displayText + "9";
                 break;
+            case "CMD_DOT":
+                displayText = displayText + ".";
+                break;
             /*
             case "CMD_P/N":
                 String sign = displayText.substring(displayText.length()-1);
@@ -187,28 +190,28 @@ public class CalculateGUI extends JFrame implements ActionListener
                 displayText = displayText + "0";
                 break;
             case "CMD_ADD":
-                displayText = displayText + "+";
+                displayText = displayText + " + ";
                 break;
             case "CMD_BS":
                 displayText = displayText.substring(0, displayText.length()-1);
                 break;
             case "CMD_SUB":
-                displayText = displayText + "-";
+                displayText = displayText + " - ";
                 break;
             case "CMD_CE":
                 displayText = "";
                 break;
             case "CMD_MUL":
-                displayText = displayText + "*";
+                displayText = displayText + " * ";
                 break;
             case "CMD_LPT":
-                displayText = displayText + "(";
+                displayText = displayText + " ( ";
                 break;
             case "CMD_DIV":
-                displayText = displayText + "/";
+                displayText = displayText + " / ";
                 break;
             case "CMD_RPT":
-                displayText = displayText + ")";
+                displayText = displayText + " ) ";
                 break;
             case "CMD_FCT":
                 displayText = displayText + "!";
@@ -218,8 +221,8 @@ public class CalculateGUI extends JFrame implements ActionListener
                 break;
             case "CMD_EQ":
                 CalculateGUI calcGUI = new CalculateGUI();
-                String postfix = calcGUI.convert(displayText);
-                double result = calcGUI.evaluate(postfix);
+                String postfix = calcGUI.convert(displayText.split(" "));
+                double result = calcGUI.evaluate(postfix.split(" "));
                 displayText = displayText + "=" + result;
                 break;
         }
@@ -230,21 +233,21 @@ public class CalculateGUI extends JFrame implements ActionListener
     /**
      * check the operator and give a precedence;
      */
-    private int checkOperator(char c)
+    private int checkOperator(String c)
     {
-        if (c == '+')
+        if (c.equals("+"))
         {
             return 1;
-        } else if (c == '-')
+        } else if (c.equals("-"))
         {
             return 1;
-        } else if (c == '*')
+        } else if (c.equals("*"))
         {
             return 2;
-        } else if (c == '/')
+        } else if (c.equals("/"))
         {
             return 2;
-        } else if (c == '!')
+        } else if (c.equals("!"))
         {
             return 3;
         } else
@@ -256,43 +259,43 @@ public class CalculateGUI extends JFrame implements ActionListener
     /**
      * convert expression in the infix format to postfix format;
      */
-    public String convert(String infix)
+    public String convert(String[] infix)
     {
-        Stack<Character> stack = new Stack();
+        Stack<String> stack = new Stack();
         String postfix = "";
         
-        for (int i = 0; i < infix.length(); i++)
+        for (int i = 0; i < infix.length; i++)
         {
-            char c = infix.charAt(i);
+            String c = infix[i];
             if (checkOperator(c) > 0)
             {
                 //operator;
                 while (!stack.isEmpty() && (checkOperator(c) <= checkOperator(stack.peek())))
                 {
-                    postfix = postfix + stack.pop();
+                    postfix = postfix + stack.pop() + " ";
                 }
                 stack.push(c);
-            } else if (c == '(')
+            } else if (c.equals("("))
             {
                 //left parenthesis;
                 stack.push(c);
-            } else if (c == ')')
+            } else if (c.equals(")"))
             {
-                while (!stack.isEmpty() && stack.peek() != '(')
+                while (!stack.isEmpty() && !stack.peek().equals("("))
                 {
-                    postfix = postfix + stack.pop();
+                    postfix = postfix + stack.pop() + " ";
                 }
                 stack.pop();        //take out the left parenthesis from the stack;
             } else 
             {
                 //operand;
-                postfix = postfix + c;
+                postfix = postfix + c + " ";
             }
         }
         
         while (!stack.isEmpty())
         {
-            postfix = postfix + stack.pop();
+            postfix = postfix + stack.pop() + " ";
         }
         
         return postfix;
@@ -301,27 +304,27 @@ public class CalculateGUI extends JFrame implements ActionListener
     /**
      * the method of evaluate;
      */
-    public double evaluate(String postfix)
+    public double evaluate(String[] postfix)
     {
         Stack<Double> stack = new Stack();
         double result = 0;
-        for (int i = 0; i < postfix.length(); i++)
+        for (int i = 0; i < postfix.length; i++)
         {
-            char c = postfix.charAt(i);
+            String c = postfix[i];
             if (checkOperator(c) > 0)
             {
                 double operand1 = Double.parseDouble("" + stack.pop());
                 double operand2 = Double.parseDouble("" + stack.pop());
-                if (c == '+')
+                if (c.equals("+"))
                 {
                     result = operand1 + operand2;
-                } else if (c == '-')
+                } else if (c.equals("-"))
                 {
                     result = operand1 - operand2;
-                } else if (c == '*')
+                } else if (c.equals("*"))
                 {
                     result = operand1 * operand2;
-                } else if (c == '/')
+                } else if (c.equals("/"))
                 {
                     result = operand1 / operand2;
                 }
