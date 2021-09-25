@@ -1,8 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
-import java.util.Scanner;
 
 /**
  * Assessment 2 the GUI of calculate.
@@ -12,8 +10,7 @@ import java.util.Scanner;
  */
 public class CalculateGUI extends JFrame implements ActionListener
 {
-    JTextField display = new JTextField();     //calculator's display;
-    String displayText = display.getText();
+    JTextField display;     //calculator's display;
     
     JButton[] nmbButtons;
     JButton equalButton;
@@ -139,8 +136,8 @@ public class CalculateGUI extends JFrame implements ActionListener
      */
     public void actionPerformed(ActionEvent e)
     {
-        //String displayText;
-        //displayText = display.getText();
+        String displayText;
+        displayText = display.getText();
         
         String cmd = e.getActionCommand();
         switch (cmd)
@@ -216,126 +213,8 @@ public class CalculateGUI extends JFrame implements ActionListener
             case "CMD_OFF":
                 System.exit(0);
                 break;
-            case "CMD_EQ":
-                CalculateGUI calcGUI = new CalculateGUI();
-                String postfix = calcGUI.convert(displayText);
-                double result = calcGUI.evaluate(postfix);
-                displayText = displayText + "=" + result;
-                break;
         }
         display.setText(displayText);
-    }
-    
-    
-    /**
-     * check the operator and give a precedence;
-     */
-    private int checkOperator(char c)
-    {
-        if (c == '+')
-        {
-            return 1;
-        } else if (c == '-')
-        {
-            return 1;
-        } else if (c == '*')
-        {
-            return 2;
-        } else if (c == '/')
-        {
-            return 2;
-        } else if (c == '!')
-        {
-            return 3;
-        } else
-        {
-            return -1;
-        }
-    }
-    
-    /**
-     * convert expression in the infix format to postfix format;
-     */
-    public String convert(String infix)
-    {
-        Stack<Character> stack = new Stack();
-        String postfix = "";
-        
-        for (int i = 0; i < infix.length(); i++)
-        {
-            char c = infix.charAt(i);
-            if (checkOperator(c) > 0)
-            {
-                //operator;
-                while (!stack.isEmpty() && (checkOperator(c) <= checkOperator(stack.peek())))
-                {
-                    postfix = postfix + stack.pop();
-                }
-                stack.push(c);
-            } else if (c == '(')
-            {
-                //left parenthesis;
-                stack.push(c);
-            } else if (c == ')')
-            {
-                while (!stack.isEmpty() && stack.peek() != '(')
-                {
-                    postfix = postfix + stack.pop();
-                }
-                stack.pop();        //take out the left parenthesis from the stack;
-            } else 
-            {
-                //operand;
-                postfix = postfix + c;
-            }
-        }
-        
-        while (!stack.isEmpty())
-        {
-            postfix = postfix + stack.pop();
-        }
-        
-        return postfix;
-    }
-    
-    /**
-     * the method of evaluate;
-     */
-    public double evaluate(String postfix)
-    {
-        Stack<Double> stack = new Stack();
-        double result = 0;
-        for (int i = 0; i < postfix.length(); i++)
-        {
-            char c = postfix.charAt(i);
-            if (checkOperator(c) > 0)
-            {
-                double operand1 = Double.parseDouble("" + stack.pop());
-                double operand2 = Double.parseDouble("" + stack.pop());
-                if (c == '+')
-                {
-                    result = operand1 + operand2;
-                } else if (c == '-')
-                {
-                    result = operand1 - operand2;
-                } else if (c == '*')
-                {
-                    result = operand1 * operand2;
-                } else if (c == '/')
-                {
-                    result = operand1 / operand2;
-                }
-                stack.push(result);
-            } else
-            {
-                //c is an operand;
-                stack.push(Double.parseDouble("" + c));
-            }
-        }
-        
-        
-        result = stack.pop();
-        return result;
     }
     
     /**
@@ -346,6 +225,5 @@ public class CalculateGUI extends JFrame implements ActionListener
     {
         CalculateGUI calcGUI = new CalculateGUI();
         calcGUI.setVisible(true);
-        
     }
 }
