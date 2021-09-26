@@ -1,8 +1,16 @@
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import java.util.Scanner;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Stack;
+
 
 /**
  * Assessment 2 the GUI of calculate.
@@ -37,13 +45,13 @@ public class CalculateGUI extends JFrame implements ActionListener
         setDefaultCloseOperation(EXIT_ON_CLOSE);        //set the program exit when the window was closed;
         setSize(400,300);       //set the window size is 400 width & 300 high;
         
-        createCalcGUI();
+        CreateCalcGUI();
     }
     
     /**
      * a method to set up the GUI;
      */
-    private void createCalcGUI()
+    private void CreateCalcGUI()
     {
         //create the panel in the top of the window;
         JPanel topPanel = new JPanel();
@@ -65,6 +73,7 @@ public class CalculateGUI extends JFrame implements ActionListener
         //create the number panel;
         JPanel nmbPanel = new JPanel();
         GridLayout nmbPanelLayout = new GridLayout(4, 3);
+        nmbPanel.setSize(300,200);
         nmbPanel.setLayout(nmbPanelLayout);
         
         //create the equal panel
@@ -101,7 +110,7 @@ public class CalculateGUI extends JFrame implements ActionListener
         
         //create display;
         display = new JTextField("");
-        Font displayFont = new Font("Times New Roman", Font.BOLD, 60);
+        Font displayFont = new Font("Times New Roman", Font.BOLD, 45);
         display.setFont(displayFont);
         display.setHorizontalAlignment(JTextField.RIGHT);
         display.setPreferredSize(new Dimension(100,70));
@@ -175,17 +184,11 @@ public class CalculateGUI extends JFrame implements ActionListener
             case "CMD_DOT":
                 displayText = displayText + ".";
                 break;
-            /*
+            
             case "CMD_P/N":
-                String sign = displayText.substring(displayText.length()-1);
-                if (sign.equals("-"))
-                {
-                    displayText = displayText.substring(0, displayText.length()-1);
-                } else {
-                    displayText = displayText + "-";
-                }
+                displayText = displayText + "-";
                 break;
-            */
+            
             case "CMD_0":
                 displayText = displayText + "0";
                 break;
@@ -205,25 +208,27 @@ public class CalculateGUI extends JFrame implements ActionListener
                 displayText = displayText + " * ";
                 break;
             case "CMD_LPT":
-                displayText = displayText + " ( ";
+                displayText = displayText + "( ";
                 break;
             case "CMD_DIV":
                 displayText = displayText + " / ";
                 break;
             case "CMD_RPT":
-                displayText = displayText + " ) ";
+                displayText = displayText + " )";
                 break;
             case "CMD_FCT":
-                displayText = displayText + "!";
+                displayText = displayText + " !";
                 break;
             case "CMD_OFF":
                 System.exit(0);
                 break;
             case "CMD_EQ":
                 CalculateGUI calcGUI = new CalculateGUI();
-                String postfix = calcGUI.convert(displayText.split(" "));
-                double result = calcGUI.evaluate(postfix.split(" "));
-                displayText = displayText + "=" + result;
+                String postfix = calcGUI.Convert(displayText.split(" "));
+                //System.out.println(postfix);
+                double result = calcGUI.Evaluate(postfix.split(" "));
+                //System.out.println(result);
+                displayText = displayText + " = " + result;
                 break;
         }
         display.setText(displayText);
@@ -231,20 +236,16 @@ public class CalculateGUI extends JFrame implements ActionListener
     
     
     /**
-     * check the operator and give a precedence;
+     * check if the character is a operator or a operand;
+     * @param: c;
+     * @return:
      */
-    private int checkOperator(String c)
+    private int CheckOperator(String c)
     {
-        if (c.equals("+"))
+        if (c.equals("+") || c.equals("-"))
         {
             return 1;
-        } else if (c.equals("-"))
-        {
-            return 1;
-        } else if (c.equals("*"))
-        {
-            return 2;
-        } else if (c.equals("/"))
+        } else if (c.equals("*") || c.equals("/"))
         {
             return 2;
         } else if (c.equals("!"))
@@ -258,8 +259,10 @@ public class CalculateGUI extends JFrame implements ActionListener
     
     /**
      * convert expression in the infix format to postfix format;
+     * @param: infix;
+     * @return: postfix;
      */
-    public String convert(String[] infix)
+    public String Convert(String[] infix)
     {
         Stack<String> stack = new Stack();
         String postfix = "";
@@ -267,10 +270,10 @@ public class CalculateGUI extends JFrame implements ActionListener
         for (int i = 0; i < infix.length; i++)
         {
             String c = infix[i];
-            if (checkOperator(c) > 0)
+            if (CheckOperator(c) > 0)
             {
                 //operator;
-                while (!stack.isEmpty() && (checkOperator(c) <= checkOperator(stack.peek())))
+                while (!stack.isEmpty() && (CheckOperator(c) <= CheckOperator(stack.peek())))
                 {
                     postfix = postfix + stack.pop() + " ";
                 }
@@ -303,18 +306,20 @@ public class CalculateGUI extends JFrame implements ActionListener
     
     /**
      * the method of evaluate;
+     * @param: postfix;
+     * return: result;
      */
-    public double evaluate(String[] postfix)
+    public double Evaluate(String[] postfix)
     {
         Stack<Double> stack = new Stack();
         double result = 0;
         for (int i = 0; i < postfix.length; i++)
         {
             String c = postfix[i];
-            if (checkOperator(c) > 0)
+            if (CheckOperator(c) > 0)
             {
-                double operand1 = Double.parseDouble("" + stack.pop());
                 double operand2 = Double.parseDouble("" + stack.pop());
+                double operand1 = Double.parseDouble("" + stack.pop());
                 if (c.equals("+"))
                 {
                     result = operand1 + operand2;
@@ -327,6 +332,15 @@ public class CalculateGUI extends JFrame implements ActionListener
                 } else if (c.equals("/"))
                 {
                     result = operand1 / operand2;
+                } else if (c.equals("!"))
+                {
+                    stack.push(operand1);
+                    int k = 1;
+                    for (int j = 1; j <= operand2; j++)
+                    {
+                        k = j * k;
+                    }
+                    result = k;
                 }
                 stack.push(result);
             } else
@@ -335,7 +349,6 @@ public class CalculateGUI extends JFrame implements ActionListener
                 stack.push(Double.parseDouble("" + c));
             }
         }
-        
         
         result = stack.pop();
         return result;

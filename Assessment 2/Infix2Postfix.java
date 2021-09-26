@@ -12,25 +12,16 @@ public class Infix2Postfix
      */
     private int checkOperator(String c)
     {
-        if (c.equals("+"))
+        if (c.equals("+") || c.equals("-"))
         {
             return 1;
-        } else if (c.equals("-"))
-        {
-            return 1;
-        } else if (c.equals("*"))
+        } else if (c.equals("*") || c.equals("/"))
         {
             return 2;
-        } else if (c.equals("/"))
-        {
-            return 2;
-        } 
-        /*
-        else if (c == "!")
+        } else if (c.equals("!"))
         {
             return 3;
-        } 
-        */
+        }
         else
         {
             return -1;
@@ -47,6 +38,7 @@ public class Infix2Postfix
         for (int i = 0; i < infix.length; i++)
         {
             String c = infix[i];
+
             if (checkOperator(c) > 0)
             {
                 //operator;
@@ -80,21 +72,7 @@ public class Infix2Postfix
         
         return postfix;
     }
-    
-    /**
-     * main method
-     */
-    
-    public static void main(String[] args)
-    {
-        Infix2Postfix i2p = new Infix2Postfix();
-        String expression = "1.2 + ( 1.3 - 24.2 ) / 2";
-        String postfix = i2p.convert(expression.split(" "));
-        System.out.println(postfix);
-        double result = i2p.evaluate(postfix.split(" "));
-        System.out.println(result);
-    }
-    
+
     /**
      * the method of evaluate;
      */
@@ -107,8 +85,8 @@ public class Infix2Postfix
             String c = postfix[i];
             if (checkOperator(c) > 0)
             {
-                double operand1 = Double.parseDouble("" + stack.pop());
                 double operand2 = Double.parseDouble("" + stack.pop());
+                double operand1 = Double.parseDouble("" + stack.pop());
                 if (c.equals("+"))
                 {
                     result = operand1 + operand2;
@@ -121,6 +99,15 @@ public class Infix2Postfix
                 } else if (c.equals("/"))
                 {
                     result = operand1 / operand2;
+                } else if (c.equals("!"))
+                {
+                    stack.push(operand1);
+                    int k = 1;
+                    for (int j = 1; j <= operand2; j++)
+                    {
+                        k = j * k;
+                    }
+                    result = k;
                 }
                 stack.push(result);
             } else
@@ -132,5 +119,21 @@ public class Infix2Postfix
         result = stack.pop();
         return result;
     }
+
+    /**
+     * main method
+     */
+    
+    public static void main(String[] args)
+    {
+        Infix2Postfix i2p = new Infix2Postfix();
+        String expression = "-1 + 2 * ( 3.6 - 3.2 / 2 ) - 2 ! ";
+        String postfix = i2p.convert(expression.split(" "));
+        System.out.println(postfix);
+        double result = i2p.evaluate(postfix.split(" "));
+        System.out.println(result);
+    }
+    
+
    
 }
