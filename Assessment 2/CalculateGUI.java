@@ -67,7 +67,7 @@ public class CalculateGUI extends JFrame implements ActionListener
         
         //create the panel in the liftside of the bottom panel;
         JPanel liftsidePanel = new JPanel();
-        GridLayout liftsidePanelLayout = new GridLayout(2,0);
+        BorderLayout liftsidePanelLayout = new BorderLayout();
         liftsidePanel.setLayout(liftsidePanelLayout);
         
         //create the number panel;
@@ -82,8 +82,8 @@ public class CalculateGUI extends JFrame implements ActionListener
         eqPanel.setLayout(eqPanelLayout);
         
         //add nmbPanel & eqPanel to the liftside panel;
-        liftsidePanel.add(nmbPanel);
-        liftsidePanel.add(eqPanel);
+        liftsidePanel.add(nmbPanel, BorderLayout.CENTER);
+        liftsidePanel.add(eqPanel, BorderLayout.PAGE_END);
         
         //create the panel in the right side of the bottom panel;
         JPanel rightsidePanel = new JPanel();
@@ -110,7 +110,7 @@ public class CalculateGUI extends JFrame implements ActionListener
         
         //create display;
         display = new JTextField("");
-        Font displayFont = new Font("Times New Roman", Font.BOLD, 45);
+        Font displayFont = new Font("Times New Roman", Font.BOLD, 20);
         display.setFont(displayFont);
         display.setHorizontalAlignment(JTextField.RIGHT);
         display.setPreferredSize(new Dimension(100,70));

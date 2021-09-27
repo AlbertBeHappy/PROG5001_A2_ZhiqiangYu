@@ -127,7 +127,7 @@ public class Infix2Postfix
     public static void main(String[] args)
     {
         Infix2Postfix i2p = new Infix2Postfix();
-        String expression = "-1 + 2 * ( 3.6 - 3.2 / 2 ) - 2 ! ";
+        String expression = "-1.4 + 29.3 * ( 3.6 - 3.2 / 2 ) + 4 ! ";
         String postfix = i2p.convert(expression.split(" "));
         System.out.println(postfix);
         double result = i2p.evaluate(postfix.split(" "));
